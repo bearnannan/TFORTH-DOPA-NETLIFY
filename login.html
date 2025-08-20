@@ -1,0 +1,986 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+         <meta charset="UTF-8">
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <title>ระบบรับแจ้งเหตุ Ticket System</title>
+     <link rel="icon" type="image/x-icon" href="https://it-dev.forth.co.th/pea/assets/images/pea-favicon.ico">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Prompt:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            min-height: 100vh;
+            font-family: 'Prompt', sans-serif;
+            font-weight: 300;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+        }
+        
+        .gold-line {
+            height: 3px;
+            background: linear-gradient(90deg, #ffd700, #ffed4e, #ffd700);
+            width: 100%;
+            position: relative;
+            top: 0;
+        }
+        
+        .main-container {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 2rem;
+        }
+        
+        .logo-emblem {
+            width: auto;
+            height: auto;
+            background: transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 15px;
+        }
+        
+
+        
+        .logo-emblem img {
+            width: auto;
+            height: 80px;
+            object-fit: contain;
+            transition: all 0.3s ease;
+        }
+        
+
+        
+
+        
+        .login-card {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            padding: 3rem;
+            width: 100%;
+            max-width: 1000px;
+            position: relative;
+            border: 1px solid rgba(111, 66, 193, 0.1);
+        }
+        
+                 .card-title {
+             color: #74065f;
+             font-size: 2.5rem;
+             font-weight: 400;
+             text-align: center;
+             margin-bottom: 3rem;
+         }
+        
+        .card-title::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 3px;
+            background: linear-gradient(90deg, #6f42c1, #8e44ad);
+            border-radius: 2px;
+        }
+        
+        .login-content {
+            display: flex;
+            gap: 2.5rem;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .login-column {
+            flex: 8;
+            padding: 2.5rem;
+            border-radius: 15px;
+            background: rgba(248, 249, 250, 0.6);
+            border: 1px solid rgba(111, 66, 193, 0.15);
+            box-shadow: 0 4px 20px rgba(111, 66, 193, 0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .login-column:hover {
+            background: rgba(248, 249, 250, 0.8);
+            box-shadow: 0 6px 25px rgba(111, 66, 193, 0.15);
+        }
+        
+        .image-column {
+            flex: 2;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+        
+        .image-placeholder {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            max-width: 350px;
+        }
+        
+        
+        
+        .column-title {
+            color: #212529;
+            font-size: 1.5rem;
+            font-weight: 400;
+            margin-bottom: 2rem;
+            text-align: center;
+            position: relative;
+        }
+        
+        .column-title::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40px;
+            height: 2px;
+            background: #6f42c1;
+            border-radius: 1px;
+        }
+        
+        .form-label {
+            font-weight: 400;
+            margin-bottom: 0.8rem;
+            font-size: 1rem;
+            color: #495057;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .form-label a {
+            color: #6f42c1;
+            text-decoration: none;
+            font-size: 0.85rem;
+            font-weight: 400;
+        }
+        
+        .form-label a:hover {
+            color: #8e44ad;
+            text-decoration: underline;
+        }
+        
+        .form-control {
+            border: 2px solid #e9ecef;
+            border-radius: 10px;
+            padding: 15px 20px;
+            font-size: 1rem;
+            margin-bottom: 1.5rem;
+            background: white;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+        
+        .form-control:focus {
+            border-color: #6f42c1;
+            box-shadow: 0 0 0 0.2rem rgba(111, 66, 193, 0.25);
+            background: white;
+        }
+        
+        .form-control::placeholder {
+            color: #6c757d;
+            opacity: 0.7;
+        }
+        
+        .password-field {
+            position: relative;
+        }
+        
+        .password-toggle {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #6c757d;
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: color 0.3s ease;
+        }
+        
+        .password-toggle:hover {
+            color: #6f42c1;
+        }
+        
+        .form-check {
+            margin: 1.5rem 0;
+        }
+        
+        .form-check-input {
+            width: 20px;
+            height: 20px;
+            margin-right: 10px;
+            border-radius: 4px;
+            border: 2px solid #6f42c1;
+            background: white;
+        }
+        
+        .form-check-input:checked {
+            background: #6f42c1;
+            border-color: #6f42c1;
+        }
+        
+        .form-check-label {
+            font-size: 1rem;
+            font-weight: 400;
+            color: #495057;
+        }
+        
+        .btn-login {
+            background: linear-gradient(135deg, #6f42c1 0%, #8e44ad 100%);
+            border: none;
+            border-radius: 10px;
+            padding: 15px 30px;
+            font-size: 1.2rem;
+            font-weight: 400;
+            color: white;
+            width: 100%;
+            margin-top: 1rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(111, 66, 193, 0.3);
+        }
+        
+                 .btn-login:hover {
+             transform: translateY(-2px);
+             box-shadow: 0 8px 25px rgba(111, 66, 193, 0.4);
+             background: linear-gradient(135deg, #5a32a3 0%, #7d3c98 100%);
+             color: white;
+         }
+        
+        .btn-login:active {
+            transform: translateY(0);
+        }
+        
+
+
+        /* Flash Messages */
+        .alert {
+            border-radius: 10px;
+            border: none;
+            margin-bottom: 2rem;
+            padding: 1rem 1.5rem;
+            position: relative;
+        }
+
+        .alert-danger {
+            background: linear-gradient(135deg, #dc3545, #c82333);
+            color: white;
+            border: 1px solid rgba(220, 53, 69, 0.2);
+        }
+
+        .alert-success {
+            background: linear-gradient(135deg, #28a745, #1e7e34);
+            color: white;
+            border: 1px solid rgba(40, 167, 69, 0.2);
+        }
+
+        .alert-warning {
+            background: linear-gradient(135deg, #ffc107, #e0a800);
+            color: white;
+            border: 1px solid rgba(255, 193, 7, 0.2);
+        }
+
+        .alert-info {
+            background: linear-gradient(135deg, #17a2b8, #138496);
+            color: white;
+            border: 1px solid rgba(23, 162, 184, 0.2);
+        }
+
+        /* Form validation styles */
+        .is-invalid {
+            border-color: #dc3545 !important;
+            background: rgba(255, 255, 255, 0.98) !important;
+            box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25) !important;
+        }
+
+        .invalid-feedback {
+            color: #dc3545;
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+            font-weight: 400;
+        }
+
+                 /* Responsive Design */
+         @media (max-width: 992px) {
+             .login-content {
+                 flex-direction: column;
+                 gap: 2.5rem;
+             }
+             
+             .login-card {
+                 padding: 2.5rem;
+             }
+             
+             .login-column {
+                 padding: 2rem;
+                 flex: 1;
+             }
+             
+             .image-column {
+                 order: -1;
+                 margin-bottom: 1rem;
+                 flex: 1;
+             }
+             
+             .image-placeholder {
+                 max-width: 280px;
+             }
+         }
+
+         @media (max-width: 768px) {
+             .main-container {
+                 padding: 0;
+                 height: 100vh;
+                 justify-content: flex-start;
+             }
+             
+             .login-card {
+                 padding: 1.5rem;
+                 margin: 0;
+                 border-radius: 0;
+                 max-width: 100%;
+                 width: 100%;
+                 height: 100vh;
+                 display: flex;
+                 flex-direction: column;
+             }
+             
+             .logo {
+                 margin-bottom: 1.5rem;
+             }
+             
+             .card-title {
+                 font-size: 2rem;
+                 margin-bottom: 2rem;
+             }
+             
+             .login-content {
+                 width: 100%;
+                 gap: 0;
+                 flex: 1;
+                 display: flex;
+                 flex-direction: column;
+             }
+             
+             .login-column {
+                 padding: 1.5rem;
+                 flex: 1;
+                 border-radius: 0;
+                 margin: 0;
+                 width: 100%;
+                 display: flex;
+                 flex-direction: column;
+             }
+             
+             .image-column {
+                 display: none;
+             }
+             
+             .form-control {
+                 padding: 12px 15px;
+                 font-size: 0.95rem;
+             }
+             
+             .btn-login {
+                 padding: 12px 25px;
+                 font-size: 1.1rem;
+                 margin-top: auto;
+             }
+             
+             .logo-emblem {
+                 width: auto;
+                 height: auto;
+                 padding: 12px;
+             }
+             
+             .logo-emblem img {
+                 width: auto;
+                 height: 70px;
+             }
+         }
+
+         @media (max-width: 576px) {
+             .main-container {
+                 padding: 0;
+                 height: 100vh;
+                 justify-content: flex-start;
+             }
+             
+             .login-card {
+                 padding: 1rem;
+                 margin: 0;
+                 border-radius: 0;
+                 max-width: 100%;
+                 width: 100%;
+                 height: 100vh;
+                 display: flex;
+                 flex-direction: column;
+             }
+             
+             .logo {
+                 margin-bottom: 1rem;
+             }
+             
+             .card-title {
+                 font-size: 1.8rem;
+                 margin-bottom: 1.5rem;
+             }
+             
+             .login-content {
+                 width: 100%;
+                 gap: 0;
+                 flex: 1;
+                 display: flex;
+                 flex-direction: column;
+             }
+             
+             .login-column {
+                 padding: 1rem;
+                 flex: 1;
+                 border-radius: 0;
+                 margin: 0;
+                 width: 100%;
+                 display: flex;
+                 flex-direction: column;
+             }
+             
+             .image-column {
+                 display: none;
+             }
+             
+             .form-label {
+                 font-size: 0.9rem;
+             }
+             
+             .form-control {
+                 padding: 10px 12px;
+                 font-size: 0.9rem;
+             }
+             
+             .btn-login {
+                 padding: 10px 20px;
+                 font-size: 1rem;
+                 margin-top: auto;
+             }
+             
+             .logo-emblem {
+                 width: auto;
+                 height: auto;
+                 padding: 10px;
+             }
+             
+             .logo-emblem img {
+                 width: auto;
+                 height: 60px;
+             }
+         }
+
+         /* Mobile Layout - New Design */
+         @media (max-width: 480px) {
+             .main-container {
+                 padding: 0;
+                 height: 100vh;
+                 justify-content: flex-start;
+                 background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+             }
+             
+             .login-card {
+                 padding: 0;
+                 margin: 0;
+                 border-radius: 0;
+                 max-width: 100%;
+                 width: 100%;
+                 height: 100vh;
+                 display: flex;
+                 flex-direction: column;
+                 background: transparent;
+                 box-shadow: none;
+                 border: none;
+             }
+             
+             .logo {
+                 margin: 2rem 0 1.5rem 0;
+                 padding: 0 1rem;
+             }
+             
+             .logo-emblem {
+                 padding: 0;
+             }
+             
+             .logo-emblem img {
+                 height: 60px;
+             }
+             
+             .card-title {
+                 font-size: 1.6rem;
+                 margin-bottom: 2rem;
+                 padding: 0 1rem;
+                 color: #74065f;
+             }
+             
+             .card-title::after {
+                 display: none;
+             }
+             
+             .login-content {
+                 width: 100%;
+                 gap: 0;
+                 flex: 1;
+                 display: flex;
+                 flex-direction: column;
+                 padding: 0 1rem;
+             }
+             
+             .login-column {
+                 padding: 1.5rem;
+                 flex: 1;
+                 border-radius: 15px;
+                 margin: 0;
+                 width: 100%;
+                 display: flex;
+                 flex-direction: column;
+                 background: white;
+                 box-shadow: 0 4px 20px rgba(111, 66, 193, 0.1);
+                 border: 1px solid rgba(111, 66, 193, 0.15);
+             }
+             
+             .image-column {
+                 display: none;
+             }
+             
+             .form-label {
+                 font-size: 0.9rem;
+                 margin-bottom: 0.5rem;
+             }
+             
+             .form-control {
+                 padding: 12px 15px;
+                 font-size: 0.9rem;
+                 margin-bottom: 1rem;
+             }
+             
+             .form-check {
+                 margin: 1rem 0;
+             }
+             
+             .btn-login {
+                 padding: 15px 20px;
+                 font-size: 1rem;
+                 margin-top: auto;
+                 margin-bottom: 1rem;
+             }
+             
+             /* Hide alerts on mobile to save space */
+             .alert {
+                 margin-bottom: 1rem;
+                 padding: 0.75rem 1rem;
+                 font-size: 0.85rem;
+             }
+         }
+
+        /* Loading animation for button */
+        .btn-login.loading {
+            pointer-events: none;
+            opacity: 0.8;
+        }
+
+        .btn-login.loading::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 20px;
+            top: 50%;
+            left: 50%;
+            margin-left: -10px;
+            margin-top: -10px;
+            border: 2px solid transparent;
+            border-top: 2px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+    <div class="gold-line"></div>
+    
+    <div class="main-container">
+        <div class="login-card">
+            <div class="logo">
+                <div class="logo-emblem">
+                    <img src="https://it-dev.forth.co.th/pea/assets/images/logo-pea.png" alt="PEA Logo">
+                </div>
+            </div>
+            <h2 class="card-title">ระบบรับแจ้งเหตุ Ticket system</h2>
+            
+            
+            
+            
+                        
+            <div class="login-content">
+                <div class="login-column">
+                    <form action="https://it-dev.forth.co.th/pea/auth/login" id="loginForm" method="post" accept-charset="utf-8">
+                        <div class="mb-3">
+                            <label for="username" class="form-label">
+                                ชื่อผู้ใช้งาน *
+                                                            </label>
+                            <input type="text" 
+                                   class="form-control " 
+                                   id="username" 
+                                   name="username" 
+                                   value="" 
+                                   placeholder="กรอกชื่อผู้ใช้"
+                                   required>
+                                                    </div>
+                        
+                        <div class="mb-3">
+                            <label for="password" class="form-label">
+                                รหัสผ่าน *
+                                <a href="#" class="text-decoration-none">ลืมรหัสผ่าน</a>
+                            </label>
+                            <div class="password-field">
+                                <input type="password" 
+                                       class="form-control " 
+                                       id="password" 
+                                       name="password" 
+                                       placeholder="กรอกรหัสผ่าน"
+                                       required>
+                                <button type="button" class="password-toggle" onclick="togglePassword()">
+                                    <i class="fas fa-eye"></i>
+                                </button>
+                            </div>
+                                                    </div>
+                        
+                        <div class="form-check">
+                            <input class="form-check-input" type="checkbox" id="remember" name="remember" value="1">
+                            <label class="form-check-label" for="remember">
+                                จดจำฉัน
+                            </label>
+                        </div>
+                        
+                        <button type="submit" class="btn btn-login">
+                            <i class="fas fa-sign-in-alt me-2"></i>เข้าสู่ระบบ
+                        </button>
+                    </form>                </div>
+                
+                
+                
+                                 <div class="image-column">
+                     <div class="image-placeholder">
+                         <svg width="350" height="350" viewBox="0 0 350 350" xmlns="http://www.w3.org/2000/svg">
+                             <!-- Modern Style Definitions -->
+                             <defs>
+                                 <!-- Modern Gradients -->
+                                 <linearGradient id="modernGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                     <stop offset="0%" style="stop-color:#667eea;stop-opacity:1" />
+                                     <stop offset="100%" style="stop-color:#764ba2;stop-opacity:1" />
+                                 </linearGradient>
+                                 
+                                 <linearGradient id="accentGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                     <stop offset="0%" style="stop-color:#f093fb;stop-opacity:1" />
+                                     <stop offset="100%" style="stop-color:#f5576c;stop-opacity:1" />
+                                 </linearGradient>
+                                 
+                                 <linearGradient id="techGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                     <stop offset="0%" style="stop-color:#4facfe;stop-opacity:1" />
+                                     <stop offset="100%" style="stop-color:#00f2fe;stop-opacity:1" />
+                                 </linearGradient>
+                                 
+                                 <linearGradient id="successGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+                                     <stop offset="0%" style="stop-color:#43e97b;stop-opacity:1" />
+                                     <stop offset="100%" style="stop-color:#38f9d7;stop-opacity:1" />
+                                 </linearGradient>
+                                 
+                                 <!-- Modern Shadow -->
+                                 <filter id="modernShadow" x="-50%" y="-50%" width="200%" height="200%">
+                                     <feDropShadow dx="0" dy="8" stdDeviation="12" flood-color="#000000" flood-opacity="0.15"/>
+                                 </filter>
+                                 
+                                 <!-- Glow Effect -->
+                                 <filter id="modernGlow">
+                                     <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
+                                     <feMerge> 
+                                         <feMergeNode in="coloredBlur"/>
+                                         <feMergeNode in="SourceGraphic"/>
+                                     </feMerge>
+                                 </filter>
+                             </defs>
+                             
+                                                           <!-- Modern Background - Full Area with Lighter Colors -->
+                              <rect width="350" height="350" fill="url(#modernGradient)" opacity="0.02"/>
+                              
+                              <!-- Additional Light Background Elements -->
+                              <circle cx="175" cy="175" r="150" fill="url(#accentGradient)" opacity="0.01"/>
+                              <circle cx="175" cy="175" r="120" fill="url(#techGradient)" opacity="0.015"/>
+                              <circle cx="175" cy="175" r="90" fill="url(#successGradient)" opacity="0.01"/>
+                             
+                             <!-- Geometric Background Elements -->
+                             <g opacity="0.1">
+                                 <circle cx="50" cy="50" r="30" fill="url(#accentGradient)"/>
+                                 <circle cx="300" cy="80" r="25" fill="url(#techGradient)"/>
+                                 <circle cx="80" cy="300" r="35" fill="url(#successGradient)"/>
+                                 <circle cx="320" cy="320" r="20" fill="url(#accentGradient)"/>
+                             </g>
+                             
+                                                           <!-- Modern Abstract Design -->
+                              <g transform="translate(175, 175)" filter="url(#modernShadow)">
+                                  <!-- Central Circle -->
+                                  <circle cx="0" cy="0" r="50" fill="url(#modernGradient)" opacity="0.8"/>
+                                  
+                                  <!-- Inner Circle -->
+                                  <circle cx="0" cy="0" r="35" fill="white" opacity="0.9"/>
+                                  
+                                  <!-- Decorative Rings -->
+                                  <circle cx="0" cy="0" r="70" fill="none" stroke="url(#accentGradient)" stroke-width="3" opacity="0.6">
+                                      <animate attributeName="r" values="70;75;70" dur="3s" repeatCount="indefinite"/>
+                                      <animate attributeName="opacity" values="0.6;0.3;0.6" dur="3s" repeatCount="indefinite"/>
+                                  </circle>
+                                  
+                                  <circle cx="0" cy="0" r="85" fill="none" stroke="url(#techGradient)" stroke-width="2" opacity="0.4">
+                                      <animate attributeName="r" values="85;90;85" dur="4s" repeatCount="indefinite"/>
+                                      <animate attributeName="opacity" values="0.4;0.1;0.4" dur="4s" repeatCount="indefinite"/>
+                                  </circle>
+                                  
+                                  <!-- Geometric Elements -->
+                                  <g transform="rotate(0)">
+                                      <rect x="-8" y="-8" width="16" height="16" fill="url(#successGradient)" opacity="0.8" rx="3">
+                                          <animateTransform attributeName="transform" type="rotate" values="0;360" dur="8s" repeatCount="indefinite"/>
+                                      </rect>
+                                  </g>
+                                  
+                                  <g transform="rotate(45)">
+                                      <rect x="-6" y="-6" width="12" height="12" fill="url(#accentGradient)" opacity="0.7" rx="2">
+                                          <animateTransform attributeName="transform" type="rotate" values="45;405" dur="6s" repeatCount="indefinite"/>
+                                      </rect>
+                                  </g>
+                                  
+                                  <g transform="rotate(90)">
+                                      <rect x="-4" y="-4" width="8" height="8" fill="url(#techGradient)" opacity="0.6" rx="1">
+                                          <animateTransform attributeName="transform" type="rotate" values="90;450" dur="4s" repeatCount="indefinite"/>
+                                      </rect>
+                                  </g>
+                                  
+                                  <!-- Floating Dots -->
+                                  <g opacity="0.8">
+                                      <circle cx="-60" cy="-60" r="4" fill="url(#accentGradient)">
+                                          <animate attributeName="opacity" values="0.8;0.3;0.8" dur="2s" repeatCount="indefinite"/>
+                                      </circle>
+                                      <circle cx="60" cy="-60" r="4" fill="url(#techGradient)">
+                                          <animate attributeName="opacity" values="0.8;0.3;0.8" dur="2.5s" repeatCount="indefinite"/>
+                                      </circle>
+                                      <circle cx="-60" cy="60" r="4" fill="url(#successGradient)">
+                                          <animate attributeName="opacity" values="0.8;0.3;0.8" dur="3s" repeatCount="indefinite"/>
+                                      </circle>
+                                      <circle cx="60" cy="60" r="4" fill="url(#modernGradient)">
+                                          <animate attributeName="opacity" values="0.8;0.3;0.8" dur="3.5s" repeatCount="indefinite"/>
+                                      </circle>
+                                  </g>
+                                  
+                                  <!-- Connecting Lines -->
+                                  <g stroke="url(#modernGradient)" stroke-width="2" opacity="0.3" stroke-linecap="round">
+                                      <line x1="-50" y1="-50" x2="50" y2="50" stroke-dasharray="5,5">
+                                          <animate attributeName="opacity" values="0.3;0.8;0.3" dur="4s" repeatCount="indefinite"/>
+                                      </line>
+                                      <line x1="50" y1="-50" x2="-50" y2="50" stroke-dasharray="5,5">
+                                          <animate attributeName="opacity" values="0.3;0.8;0.3" dur="4s" repeatCount="indefinite"/>
+                                      </line>
+                                  </g>
+                                  
+                                  <!-- Center Icon -->
+                                  <g transform="translate(0, 0)">
+                                      <!-- Ticket Icon -->
+                                      <rect x="-15" y="-8" width="30" height="16" fill="url(#modernGradient)" rx="3"/>
+                                      <rect x="-12" y="-5" width="24" height="10" fill="white" rx="2"/>
+                                      <line x1="-8" y1="-2" x2="8" y2="-2" stroke="url(#modernGradient)" stroke-width="1"/>
+                                      <line x1="-8" y1="2" x2="8" y2="2" stroke="url(#modernGradient)" stroke-width="1"/>
+                                      <line x1="-8" y1="6" x2="8" y2="6" stroke="url(#modernGradient)" stroke-width="1"/>
+                                      
+                                      <!-- Ticket Holes -->
+                                      <circle cx="-10" cy="0" r="1.5" fill="url(#modernGradient)"/>
+                                      <circle cx="10" cy="0" r="1.5" fill="url(#modernGradient)"/>
+                                  </g>
+                              </g>
+                             
+                             <!-- Modern Floating Elements -->
+                             <g filter="url(#modernShadow)">
+                                 <!-- Modern Smartphone -->
+                                 <rect x="60" y="60" width="30" height="50" rx="4" fill="url(#techGradient)"/>
+                                 <rect x="63" y="63" width="24" height="44" rx="2" fill="#2c3e50"/>
+                                 <circle cx="75" cy="75" r="2" fill="url(#accentGradient)"/>
+                                 <rect x="70" y="85" width="10" height="1" fill="white"/>
+                                 <rect x="70" y="88" width="10" height="1" fill="white"/>
+                                 
+                                 <!-- Modern Laptop -->
+                                 <rect x="240" y="80" width="60" height="40" rx="6" fill="url(#modernGradient)"/>
+                                 <rect x="245" y="85" width="50" height="30" fill="#2c3e50"/>
+                                 <rect x="250" y="90" width="40" height="20" fill="url(#techGradient)" opacity="0.8"/>
+                                 <rect x="255" y="95" width="30" height="10" fill="white" opacity="0.9"/>
+                                 
+                                 <!-- Modern Documents -->
+                                 <rect x="50" y="220" width="40" height="50" rx="4" fill="white" stroke="url(#modernGradient)" stroke-width="2"/>
+                                 <line x1="55" y1="230" x2="85" y2="230" stroke="url(#modernGradient)" stroke-width="1.5"/>
+                                 <line x1="55" y1="235" x2="80" y2="235" stroke="url(#modernGradient)" stroke-width="1.5"/>
+                                 <line x1="55" y1="240" x2="75" y2="240" stroke="url(#modernGradient)" stroke-width="1.5"/>
+                                 <line x1="55" y1="245" x2="82" y2="245" stroke="url(#modernGradient)" stroke-width="1.5"/>
+                                 
+                                 <!-- Modern ID Card -->
+                                 <rect x="220" y="200" width="45" height="30" rx="6" fill="white" stroke="url(#accentGradient)" stroke-width="2"/>
+                                 <rect x="225" y="205" width="35" height="20" fill="url(#accentGradient)" opacity="0.1"/>
+                                 <circle cx="242" cy="215" r="3" fill="url(#accentGradient)"/>
+                                 <rect x="235" y="225" width="15" height="1.5" fill="url(#accentGradient)"/>
+                             </g>
+                             
+                             <!-- Modern Connection Lines -->
+                             <g stroke="url(#modernGradient)" stroke-width="2.5" opacity="0.4" stroke-linecap="round">
+                                 <line x1="175" y1="175" x2="75" y2="85" stroke-dasharray="8,6"/>
+                                 <line x1="175" y1="175" x2="270" y2="100" stroke-dasharray="8,6"/>
+                                 <line x1="175" y1="175" x2="70" y2="245" stroke-dasharray="8,6"/>
+                                 <line x1="175" y1="175" x2="242" y2="215" stroke-dasharray="8,6"/>
+                             </g>
+                             
+                             <!-- Modern Animated Elements -->
+                             <g filter="url(#modernGlow)">
+                                 <!-- Pulsing Circles -->
+                                 <circle cx="75" cy="85" r="10" fill="none" stroke="url(#accentGradient)" stroke-width="2.5">
+                                     <animate attributeName="r" values="10;15;10" dur="3s" repeatCount="indefinite"/>
+                                     <animate attributeName="opacity" values="0.8;0.3;0.8" dur="3s" repeatCount="indefinite"/>
+                                 </circle>
+                                 <circle cx="270" cy="100" r="8" fill="none" stroke="url(#techGradient)" stroke-width="2.5">
+                                     <animate attributeName="r" values="8;13;8" dur="2.5s" repeatCount="indefinite"/>
+                                     <animate attributeName="opacity" values="0.8;0.3;0.8" dur="2.5s" repeatCount="indefinite"/>
+                                 </circle>
+                                 <circle cx="70" cy="245" r="9" fill="none" stroke="url(#successGradient)" stroke-width="2.5">
+                                     <animate attributeName="r" values="9;14;9" dur="3.5s" repeatCount="indefinite"/>
+                                     <animate attributeName="opacity" values="0.8;0.3;0.8" dur="3.5s" repeatCount="indefinite"/>
+                                 </circle>
+                                 <circle cx="242" cy="215" r="7" fill="none" stroke="url(#modernGradient)" stroke-width="2.5">
+                                     <animate attributeName="r" values="7;12;7" dur="2.8s" repeatCount="indefinite"/>
+                                     <animate attributeName="opacity" values="0.8;0.3;0.8" dur="2.8s" repeatCount="indefinite"/>
+                                 </circle>
+                             </g>
+                             
+                             <!-- Modern Floating Particles -->
+                             <g opacity="0.7">
+                                 <circle cx="120" cy="120" r="3" fill="url(#accentGradient)">
+                                     <animate attributeName="cy" values="120;100;120" dur="4s" repeatCount="indefinite"/>
+                                     <animate attributeName="opacity" values="0.7;1;0.7" dur="4s" repeatCount="indefinite"/>
+                                 </circle>
+                                 <circle cx="280" cy="150" r="2.5" fill="url(#techGradient)">
+                                     <animate attributeName="cy" values="150;130;150" dur="3.5s" repeatCount="indefinite"/>
+                                     <animate attributeName="opacity" values="0.7;1;0.7" dur="3.5s" repeatCount="indefinite"/>
+                                 </circle>
+                                 <circle cx="100" cy="280" r="3.5" fill="url(#successGradient)">
+                                     <animate attributeName="cy" values="280;260;280" dur="4.5s" repeatCount="indefinite"/>
+                                     <animate attributeName="opacity" values="0.7;1;0.7" dur="4.5s" repeatCount="indefinite"/>
+                                 </circle>
+                             </g>
+                         </svg>
+                     </div>
+                 </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
+    <script>
+        // Toggle password visibility
+        function togglePassword() {
+            const passwordField = document.getElementById('password');
+            const toggleBtn = document.querySelector('.password-toggle i');
+            
+            if (passwordField.type === 'password') {
+                passwordField.type = 'text';
+                toggleBtn.className = 'fas fa-eye-slash';
+            } else {
+                passwordField.type = 'password';
+                toggleBtn.className = 'fas fa-eye';
+            }
+        }
+        
+        // Auto-hide alerts after 5 seconds
+        setTimeout(function() {
+            $('.alert').fadeOut('slow');
+        }, 5000);
+
+        // Form validation and loading animation
+        $(document).ready(function() {
+            $('#loginForm').submit(function(e) {
+                var isValid = true;
+                var $btn = $(this).find('.btn-login');
+                
+                // Check required fields
+                $('[required]').each(function() {
+                    if (!$(this).val().trim()) {
+                        $(this).addClass('is-invalid');
+                        isValid = false;
+                    } else {
+                        $(this).removeClass('is-invalid');
+                    }
+                });
+                
+                if (isValid) {
+                    // Add loading state
+                    $btn.addClass('loading').prop('disabled', true);
+                    $btn.html('<i class="fas fa-spinner fa-spin me-2"></i>กำลังเข้าสู่ระบบ...');
+                    
+                    // Prevent double submission
+                    setTimeout(function() {
+                        if ($btn.hasClass('loading')) {
+                            $btn.removeClass('loading').prop('disabled', false);
+                            $btn.html('<i class="fas fa-sign-in-alt me-2"></i>เข้าสู่ระบบ');
+                        }
+                    }, 10000); // Timeout after 10 seconds
+                } else {
+                    e.preventDefault();
+                    // Show error message
+                    if (!$('.alert-danger').length) {
+                        $('<div class="alert alert-danger alert-dismissible fade show" role="alert">' +
+                          '<i class="fas fa-exclamation-triangle me-2"></i>กรุณากรอกข้อมูลให้ครบถ้วน' +
+                          '<button type="button" class="btn-close" data-bs-dismiss="alert"></button>' +
+                          '</div>').insertBefore('#loginForm');
+                    }
+                }
+                
+                return isValid;
+            });
+            
+            // Remove invalid class on input
+            $('.form-control').on('input', function() {
+                if ($(this).val().trim()) {
+                    $(this).removeClass('is-invalid');
+                }
+            });
+            
+            // Focus on username field
+            $('#username').focus();
+        });
+    </script>
+</body>
+</html> 
